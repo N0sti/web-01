@@ -106,15 +106,15 @@ export class GameComponent  extends Component{
     let seconds = 0;
     // TODO #template-literals:  use template literals (backquotes)
     document.querySelector("nav .navbar-title").textContent =
-      "Player: " + this._name + ". Elapsed time: " + seconds++;
+      `Player: ${this._name}. Elapsed time: ${seconds++}`;
 
     this._timer = setInterval(
       // TODO #arrow-function: use arrow function instead.
-      function () {
+      () => {
         // TODO #template-literals:  use template literals (backquotes)
         document.querySelector("nav .navbar-title").textContent =
-          "Player: " + this._name + ". Elapsed time: " + seconds++;
-      }.bind(this),
+          `Player: ${this._name}. Elapsed time: ${seconds++}`;
+      },
       1000
     );
   }
@@ -128,7 +128,7 @@ export class GameComponent  extends Component{
           : new ActiveXObject("Microsoft.XMLHTTP");
     
       // TODO #template-literals:  use template literals (backquotes)
-      xhr.open("get", environment.api.host + "/board?size=" + this._size, true);
+      xhr.open("get", `${environment.api.host}/board?size=${this._size}`, true);
     
       // TODO #arrow-function: use arrow function instead.
       xhr.onreadystatechange = function () {
@@ -157,23 +157,11 @@ export class GameComponent  extends Component{
         (Date.now() - this._startTime) / 1000
       );
       clearInterval(this._timer);
-
-      setTimeout(
-        // TODO #arrow-function: use arrow function instead.
-        function () {
-          let scorePage = "./#score";
-          // TODO #template-literals:  use template literals (backquotes)
-          window.location =
-            scorePage +
-            "?name=" +
-            this._name +
-            "&size=" +
-            this._size +
-            "&time=" +
-            timeElapsedInSeconds;
-        }.bind(this),
-        750
-      );
+      setTimeout(() => {
+        const scorePage = "#score";
+        // TODO #template-literals:  use template literals (backquotes)
+        window.location = `${scorePage}?name=${this._name}&size=${this._size}&time=${timeElapsedInSeconds}`;
+      }, 750);
   }
 
   /* method GameComponent._flipCard */
