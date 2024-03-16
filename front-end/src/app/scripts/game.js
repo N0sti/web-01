@@ -1,4 +1,5 @@
 import { parseUrl } from './utils.js';
+
 import { Component } from './component.js';
 import template from "../views/game.html";
 
@@ -51,6 +52,7 @@ export class GameComponent  extends Component{
   
   // gather parameters from URL
   let params = parseUrl();
+  console.log("params", params)
 
   // save player name & game ize
   this._name = params.name;
@@ -63,42 +65,24 @@ export class GameComponent  extends Component{
 
 
   /* method GameComponent.init */
-  init() 
-  {
+  init() {
     // fetch the cards configuration from the server
-    this.fetchConfig(
-      // TODO #arrow-function: use arrow function instead.
-      function (config) {
-        this._config = config;
-        this._boardElement = document.querySelector(".cards");
-
-        // create cards out of the config
-        this._cards = [];
-        // TODO #functional-programming: use Array.map() instead.
-        for (let i in this._config.ids) {
-          this._cards[i] = new CardComponent(this._config.ids[i]);
-        }
-
-        // TODO #functional-programming: use Array.forEach() instead.
-        // TODO #let-const: replace var with let.
-        for (let i in this._cards) {
-          let card = this._cards[i];
-
-          // TODO #let-const: extract function _appendCard (ie: copy its body here and remove the function)
-          this._boardElement.appendChild(card.getElement());
-          card.getElement().addEventListener(
-            "click",
-            // TODO #arrow-function: use arrow function instead.
-            function () {
-              this._flipCard(card);
-            }.bind(this)
-          );
-        }
-
-        this.start();
-      }.bind(this)
-    );
-  };
+    this.fetchConfig(config => {
+      this._config = config;
+      this._boardElement = document.querySelector(".cards");
+  
+      // create cards out of the config using Array.map()
+      this._cards = this._config.ids.map(id => new CardComponent(id));
+  
+      // Use Array.forEach() to append cards to the board and add click event listeners
+      this._cards.forEach(card => {
+        this._boardElement.appendChild(card.getElement());
+        card.getElement().addEventListener("click", () => this._flipCard(card));
+      });
+  
+      this.start();
+    });
+  }
 
   /* method GameComponent.start */
   start() {
@@ -224,55 +208,50 @@ export class GameComponent  extends Component{
 
   /* class CardComponent constructor */
 
-  class CardComponent extends Component{
-    // is this card flipped?
-    constructor(id) {
-      super(CARD_TEMPLATE);
-      this._flipped = false;
-      
+class CardComponent extends Component{
+  // is this card flipped?
+  constructor(id) {
+    super(CARD_TEMPLATE);
+    this._flipped = false;
+    
 
-      // has the matching card has been discovered already?
-      this.matched = false;
+    // has the matching card has been discovered already?
+    this.matched = false;
 
-      this._elt = document.createElement("div");
-      this._elt.innerHTML = this.template;
-      this._elt = this._elt.firstElementChild;
-      this._id = id;
+    this._elt = document.createElement("div");
+    this._elt.innerHTML = this.template;
+    this._elt = this._elt.firstElementChild;
+    this._id = id;
 
-      this._imageElt = this.getElement().querySelector(".card-wrapper");
-      this._imageElt.querySelector("img.front-face").src =
-        CARDS_IMAGE[this._id + 1];
-      this._imageElt.querySelector("img.back-face").src = CARDS_IMAGE[0];
-    }
-    /* method CardComponent.flip */
-    flip()
-    {
-      this._imageElt.classList.toggle("flip");
-      this._flipped = !this._flipped;
-    }
-
-    /* method CardComponent.equals */
-    equals(card)
-    {
-        return card._id === this._id;
-    }
-
-    /* CardComponent.get_flipped() */
-    get_flipped()
-    {
-      class CardComponent{
-        get _flipped(){
-          return this._flipped;
-        }
-      }
-    }
-    /* method CardComponent.getElement */
-    getElement(){
-      return this._elt;
-    }
+    this._imageElt = this.getElement().querySelector(".card-wrapper");
+    this._imageElt.querySelector("img.front-face").src =
+      CARDS_IMAGE[this._id + 1];
+    this._imageElt.querySelector("img.back-face").src = CARDS_IMAGE[0];
+  }
+  /* method CardComponent.flip */
+  flip()
+  {
+    this._imageElt.classList.toggle("flip");
+    this._flipped = !this._flipped;
   }
 
+  /* method CardComponent.equals */
+  equals(card)
+  {
+      return card._id === this._id;
+  }
 
-
-
-  
+  /* CardComponent.get_flipped() */
+  get_flipped()
+  {
+    class CardComponent{
+      get _flipped(){
+        return this._flipped;
+      }
+    }
+  }
+  /* method CardComponent.getElement */
+  getElement(){
+    return this._elt;
+  }
+}
