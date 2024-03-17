@@ -4,6 +4,10 @@ import { GameComponent } from "./app/components/game/game.component";
 import { ScoreComponent } from "./app/components/score/score.component";
 import "./../node_modules/bootstrap/dist/css/bootstrap.css";
 import "./styles/style.css";
+import NavbarComponent from './app/components/navbar/navbar.component';
+customElements.define("my-navbar", NavbarComponent);
+import FooterComponent from './app/components/footer/footer.component';
+customElements.define("my-footer", FooterComponent);
 
 const outlet = document.querySelector("#content-outlet");
 const router = new Router(outlet);
