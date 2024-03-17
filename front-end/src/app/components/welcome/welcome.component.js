@@ -1,4 +1,7 @@
-import template from "../views/welcome.html";
+//import { Component } from "../../../scripts/component.js";
+import template from "../welcome/welcome.component.html";
+
+import "./welcome.component.css";
 // TODO #class: use the ES6 class keyword
 /* class WelcomeComponent constructor  */
 export class WelcomeComponent {
